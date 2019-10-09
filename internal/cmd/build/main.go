@@ -61,18 +61,17 @@ func makeDirWriteable(dir string) (reset func() error, err error) {
 	}
 
 	if err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() {
+		if !info.IsDir() || info.Name() == ".git" {
 			return nil
 		}
 
-		fullpath := filepath.Join(path, info.Name())
 		mode := info.Mode()
 		if mode & 0200 == 0 {
-			if err := os.Chmod(fullpath, mode | 0200); err != nil {
+			if err := os.Chmod(path, mode | 0200); err != nil {
 				return err
 			}
 		}
-		markedDirs[fullpath] = mode
+		markedDirs[path] = mode
 		return nil
 	}); err != nil {
 		_ = reset()
