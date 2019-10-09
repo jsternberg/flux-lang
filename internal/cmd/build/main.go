@@ -88,6 +88,12 @@ func main() {
 		panic(err)
 	}
 
+	reset, err := makeDirWriteable(pkg.Dir)
+	if err != nil {
+		panic(err)
+	}
+	defer func() { _ = reset() }()
+
 	cmd := exec.Command("cargo", "build", "--release")
 	cmd.Dir = pkg.Dir
 	cmd.Stdout = os.Stdout
