@@ -1,5 +1,7 @@
 package parser
 
+//go:generate cargo build --release
+
 // #cgo LDFLAGS: -Ltarget/release -lflux_parser
 // #include <stdlib.h>
 // void flux_parse_json(const char*);
